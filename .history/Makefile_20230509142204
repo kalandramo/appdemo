@@ -1,0 +1,21 @@
+dep:
+	go mod tidy
+
+install_hz_latest:
+	go install github.com/cloudwego/hertz/cmd/hz@latest
+
+kitex_gen_base:
+	kitex --thrift-plugin validator -module github.com/kalandramo/mocheng ./idl/user.thrift
+
+.PHONY: hertz_gen_model	
+hertz_gen_model:
+    hz model --idl=idl/api.thrift --mod=github.com/kalandramo/mocheng --model_dir=hertz_gen
+
+run_user: dep
+	@cd cmd/user && sh build.sh && sh output/bootstrap.sh
+
+run_api:
+	cd cmd/api && sh build.sh && sh output/bootstrap.sh
+
+hertz_gen_client:
+	hz client --idl=idl/api.thrift --base_domain=http://127.0.0.1:8080 --client_dir=api_request --mod=github.com/kalandramo/mocheng --model_dir=hertz_gen

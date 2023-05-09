@@ -1,0 +1,5 @@
+dep:
+	go mod tidy
+
+kitex_gen_base:
+	kitex --thrift-plugin validator -module github.com/kalandramo/mocheng ./idl/base.thrift
